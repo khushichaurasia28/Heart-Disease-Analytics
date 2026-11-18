@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block heading %}Project overview{% endblock %}
+{% block content %}
+<section class="overview-band">
+	<div class="overview-copy"><span class="eyebrow">B.TECH · AI & DATA SCIENCE</span><h2>Heart disease<br>data analytics</h2><p>A student-led study of the Cleveland cardiovascular dataset, from cleaning and exploratory analysis to a Flask presentation layer and Tableau-ready export.</p><a class="button" href="{{ url_for('dashboard') }}">Open dashboard</a></div>
+	<div class="overview-totals" aria-label="Dataset summary">
+		<div><span>Processed records</span><strong>{{ total }}</strong></div>
+		<div><span>Disease-present group</span><strong>{{ cases }} <small>({{ rate }}%)</small></strong></div>
+		<div><span>No-disease group</span><strong>{{ without }}</strong></div>
+		<div><span>Source fields</span><strong>{{ variables }}</strong></div>
+	</div>
+</section>
+<section class="section-block">
+	<div class="section-heading"><div><span class="eyebrow">PROJECT WORKFLOW</span><h2>From source file to findings</h2></div><a class="text-link" href="{{ url_for('about') }}">Project details</a></div>
+	<div class="workflow-list">
+		<a href="{{ url_for('analysis_page') }}"><span class="step-number">01</span><div><b>Prepare the data</b><p>Check source quality, handle missing values and create analysis labels.</p></div><span class="step-arrow">View cleaning notes</span></a>
+		<a href="{{ url_for('dashboard') }}"><span class="step-number">02</span><div><b>Explore patterns</b><p>Compare age, sex, cholesterol, resting blood pressure and target groups.</p></div><span class="step-arrow">Open dashboard</span></a>
+		<a href="{{ url_for('explorer') }}"><span class="step-number">03</span><div><b>Inspect and export</b><p>Filter individual processed records or use the CSV in Tableau.</p></div><span class="step-arrow">Explore records</span></a>
+	</div>
+</section>
+<p class="disclaimer">The outcome grouping is descriptive: original target values 1–4 are grouped as disease present. This project does not train a model or provide medical advice.</p>
+{% endblock %}

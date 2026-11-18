@@ -1,0 +1,7 @@
+Flask>=3.0
+pandas>=2.1
+numpy>=1.26
+matplotlib>=3.8
+seaborn>=0.13
+ucimlrepo>=0.0.7
+pytest>=8.0

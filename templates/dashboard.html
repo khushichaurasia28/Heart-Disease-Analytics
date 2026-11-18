@@ -1,0 +1,42 @@
+{% extends "base.html" %}{% block heading %}Analytics dashboard{% endblock %}
+{% block content %}
+<form class="filters" method="get">
+	<label>Age group<select name="age"><option value="All">All ages</option>{% for option in age_options %}<option value="{{ option }}" {{ 'selected' if selected_age == option else '' }}>{{ option }}</option>{% endfor %}</select></label>
+	<label>Sex<select name="sex"><option value="All">All</option><option value="Female" {{ 'selected' if selected_sex == 'Female' else '' }}>Female</option><option value="Male" {{ 'selected' if selected_sex == 'Male' else '' }}>Male</option></select></label>
+	<button class="button" type="submit">Apply filters</button><a class="reset" href="{{ url_for('dashboard') }}">Reset</a>
+</form>
+<div class="kpi-grid">
+	{% for icon,label,value,sub in [('▤','Records in view',kpis.total,'After selected filters'),('♥','Disease present',kpis.cases,'Original target above 0'),('○','No disease',kpis.without,'Original target equals 0'),('%','Disease share',kpis.rate|string+'%','Descriptive proportion'),('◷','Mean age',kpis.age,'Years'),('◈','Mean cholesterol',kpis.chol,'mg/dL'),('↕','Mean resting BP',kpis.bp,'mm Hg'),('⌁','Mean maximum heart rate',kpis.heart_rate,'bpm')] %}<div class="kpi"><div class="kpi-heading"><span class="kpi-icon" aria-hidden="true">{{ icon }}</span><span>{{ label }}</span></div><strong>{{ value }}</strong><small>{{ sub }}</small></div>{% endfor %}
+</div>
+<div class="section-heading chart-section-heading"><div><span class="eyebrow">FILTERED DATASET</span><h2>Distributions and group comparisons</h2></div><span class="muted">Values are descriptive, not predictive</span></div>
+<div class="chart-grid">
+	<section class="chart-card"><h3>Heart-disease group distribution</h3><p>Record count by binary target group</p><canvas id="disease" aria-label="Heart disease group distribution"></canvas></section>
+	<section class="chart-card"><h3>Observed disease proportion by age</h3><p>Percentage within each age group</p><canvas id="age" aria-label="Disease proportion by age group"></canvas></section>
+	<section class="chart-card"><h3>Observed disease proportion by sex</h3><p>Percentage within each sex group</p><canvas id="sex" aria-label="Disease proportion by sex"></canvas></section>
+	<section class="chart-card"><h3>Records by sex</h3><p>Count in the filtered dataset</p><canvas id="sex-counts" aria-label="Record count by sex"></canvas></section>
+	<section class="chart-card"><h3>Observed disease proportion by chest-pain code</h3><p>Descriptive rate by source category</p><canvas id="chest-pain" aria-label="Disease proportion by chest-pain code"></canvas></section>
+	<section class="chart-card"><h3>Mean cholesterol by outcome group</h3><p>Cholesterol in mg/dL</p><canvas id="chol" aria-label="Average cholesterol by group"></canvas></section>
+	<section class="chart-card"><h3>Mean resting blood pressure by group</h3><p>Resting pressure in mm Hg</p><canvas id="bp" aria-label="Average resting blood pressure by group"></canvas></section>
+	<section class="chart-card"><h3>Mean maximum heart rate by group</h3><p>Maximum heart rate in beats per minute</p><canvas id="heart-rate" aria-label="Average maximum heart rate by disease group"></canvas></section>
+</div>
+<div class="actions"><a class="button secondary" href="{{ url_for('download_csv') }}">Download processed CSV</a><a class="button secondary" href="{{ url_for('download_report') }}">Download summary report</a></div>
+{% endblock %}
+{% block scripts %}<script>
+const d = {{ charts|tojson }};
+const palette = ['#2f705b', '#c46b50', '#d2a44c', '#587f8c'];
+const common = {responsive: true, maintainAspectRatio: false, plugins: {legend: {display: false}}, scales: {y: {beginAtZero: true, grid: {color: '#e7ece7'}, ticks: {color: '#687772'}}, x: {grid: {display: false}, ticks: {color: '#687772'}}}};
+function bar(id, labels, values, label, color, percentage = false, counts = null) {
+	const options = structuredClone(common);
+	if (percentage) options.scales.y.max = 100;
+	options.plugins.tooltip = {callbacks: {label: (context) => `${label}: ${context.raw}${percentage ? '%' : ''}${counts ? ` (n=${counts[context.dataIndex]})` : ''}`}};
+	new Chart(document.getElementById(id), {type: 'bar', data: {labels, datasets: [{label, data: values, backgroundColor: color, borderRadius: 4, maxBarThickness: 44}]}, options});
+}
+new Chart(document.getElementById('disease'), {type: 'doughnut', data: {labels: d.disease_labels, datasets: [{data: d.disease_values, backgroundColor: palette.slice(0, 2), borderColor: '#fff', borderWidth: 3}]}, options: {responsive: true, maintainAspectRatio: false, cutout: '62%', plugins: {legend: {position: 'bottom', labels: {usePointStyle: true, padding: 18}}}}});
+bar('age', d.age_labels, d.age_values, 'Observed proportion', palette[0], true, d.age_counts);
+bar('sex', d.sex_labels, d.sex_values, 'Observed proportion', palette[1], true, d.sex_counts);
+bar('sex-counts', d.sex_labels, d.sex_counts, 'Records', palette[2]);
+bar('chest-pain', d.cp_labels, d.cp_values, 'Observed proportion', palette[2], true, d.cp_counts);
+bar('chol', d.chol_labels, d.chol_values, 'Mean cholesterol (mg/dL)', palette[0]);
+bar('bp', d.bp_labels, d.bp_values, 'Mean resting BP (mm Hg)', palette[3]);
+bar('heart-rate', d.heart_rate_labels, d.heart_rate_values, 'Mean maximum heart rate (bpm)', palette[1]);
+</script>{% endblock %}

@@ -1,0 +1,2 @@
+{% extends "base.html" %}{% block heading %}Workspace status{% endblock %}
+{% block content %}<section class="panel setup"><span class="eyebrow">REQUEST STATUS</span><h2>We could not load this view</h2><p>{{ error }}</p><ol><li>Confirm that <code>data/raw/heart.csv</code> is available.</li><li>Install the packages listed in <code>requirements.txt</code>.</li><li>Run <code>python app.py</code> and review the terminal output if the issue continues.</li></ol><a class="button" href="{{ url_for('home') }}">Back to overview</a></section>{% endblock %}

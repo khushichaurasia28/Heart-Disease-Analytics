@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>{% block title %}Heart Disease Analytics{% endblock %}</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+	<div class="shell">
+		<aside class="sidebar">
+			<a class="brand" href="{{ url_for('home') }}">
+				<span class="brand-icon" aria-hidden="true">H</span>
+				<span><b>Heart Disease</b><small>ANALYTICS PROJECT</small></span>
+			</a>
+			<nav class="primary-nav" aria-label="Main navigation">
+				<a class="{{ 'active' if request.endpoint == 'home' else '' }}" href="{{ url_for('home') }}" {{ 'aria-current=page' if request.endpoint == 'home' else '' }}><span>01</span>Overview</a>
+				<a class="{{ 'active' if request.endpoint == 'dashboard' else '' }}" href="{{ url_for('dashboard') }}" {{ 'aria-current=page' if request.endpoint == 'dashboard' else '' }}><span>02</span>Dashboard</a>
+				<a class="{{ 'active' if request.endpoint == 'explorer' else '' }}" href="{{ url_for('explorer') }}" {{ 'aria-current=page' if request.endpoint == 'explorer' else '' }}><span>03</span>Data Explorer</a>
+				<a class="{{ 'active' if request.endpoint == 'analysis_page' else '' }}" href="{{ url_for('analysis_page') }}" {{ 'aria-current=page' if request.endpoint == 'analysis_page' else '' }}><span>04</span>Cleaning & EDA</a>
+				<a class="{{ 'active' if request.endpoint == 'insights_page' else '' }}" href="{{ url_for('insights_page') }}" {{ 'aria-current=page' if request.endpoint == 'insights_page' else '' }}><span>05</span>Insights</a>
+				<a class="{{ 'active' if request.endpoint == 'about' else '' }}" href="{{ url_for('about') }}" {{ 'aria-current=page' if request.endpoint == 'about' else '' }}><span>06</span>About project</a>
+			</nav>
+			<div class="side-note"><b>B.Tech · AI & Data Science</b><span>Team project · 4 members</span></div>
+		</aside>
+		<main class="main">
+			<header class="topbar">
+				<div><span class="eyebrow">CARDIOVASCULAR DATA · CLEVELAND SUBSET</span><h1>{% block heading %}Heart Disease Analytics{% endblock %}</h1></div>
+				<span class="status">Descriptive analysis</span>
+			</header>
+			{% block content %}{% endblock %}
+			<footer>Educational project using historical data · Not for diagnosis or treatment decisions</footer>
+		</main>
+	</div>
+	{% block scripts %}{% endblock %}
+</body>
+</html>

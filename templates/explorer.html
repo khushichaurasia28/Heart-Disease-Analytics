@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block heading %}Data explorer{% endblock %}
+{% block content %}
+<section class="panel">
+	<div class="section-intro"><div><span class="eyebrow">PROCESSED RECORDS</span><h2>Explore the patient-level table</h2></div><a class="button secondary" href="{{ url_for('download_csv') }}">Download CSV</a></div>
+	<form class="explorer-filters" method="get">
+		<label class="search-field">Search records<input name="q" value="{{ query }}" placeholder="Search any field"></label>
+		<label>Age group<select name="age_group"><option value="All">All ages</option>{% for option in age_options %}<option value="{{ option }}" {{ 'selected' if selected_age == option else '' }}>{{ option }}</option>{% endfor %}</select></label>
+		<label>Sex<select name="sex"><option value="All">All</option><option value="Female" {{ 'selected' if selected_sex == 'Female' else '' }}>Female</option><option value="Male" {{ 'selected' if selected_sex == 'Male' else '' }}>Male</option></select></label>
+		<label>Target group<select name="disease"><option value="All">All records</option><option value="Disease present" {{ 'selected' if selected_disease == 'Disease present' else '' }}>Disease present</option><option value="No disease" {{ 'selected' if selected_disease == 'No disease' else '' }}>No disease</option></select></label>
+		<label>Cholesterol min<input type="number" name="min_chol" value="{{ min_chol }}" inputmode="decimal"></label>
+		<label>Cholesterol max<input type="number" name="max_chol" value="{{ max_chol }}" inputmode="decimal"></label>
+		<label>Resting BP min<input type="number" name="min_bp" value="{{ min_bp }}" inputmode="decimal"></label>
+		<label>Resting BP max<input type="number" name="max_bp" value="{{ max_bp }}" inputmode="decimal"></label>
+		<label>Sort by<select name="sort">{% for option in ['age', 'chol', 'trestbps', 'thalach', 'target'] %}<option value="{{ option }}" {{ 'selected' if sort_by == option else '' }}>{{ option }}</option>{% endfor %}</select></label>
+		<label>Order<select name="order"><option value="asc" {{ 'selected' if sort_order == 'asc' else '' }}>Ascending</option><option value="desc" {{ 'selected' if sort_order == 'desc' else '' }}>Descending</option></select></label>
+		<button class="button" type="submit">Apply filters</button><a class="reset" href="{{ url_for('explorer') }}">Reset</a>
+	</form>
+	{% if filter_error %}<p class="form-error" role="alert">{{ filter_error }}</p>{% endif %}
+	<div class="table-meta"><p class="muted">Showing {{ first_record }}–{{ last_record }} of {{ count }} matching records</p><span class="muted">Processed CSV · {{ columns|length }} fields</span></div>
+	<div class="table-wrap"><table><thead><tr>{% for column in columns %}<th scope="col">{{ column }}</th>{% endfor %}</tr></thead><tbody>
+	{% for row in rows %}<tr>{% for column in columns %}<td>{{ row[column] }}</td>{% endfor %}</tr>{% else %}<tr><td class="empty-state" colspan="{{ columns|length }}">No records match these filters.</td></tr>{% endfor %}
+	</tbody></table></div>
+	<nav class="pagination" aria-label="Explorer pages">
+		<a class="page-link {{ 'disabled' if page <= 1 else '' }}" href="{{ url_for('explorer', q=query, age_group=selected_age, sex=selected_sex, disease=selected_disease, min_chol=min_chol, max_chol=max_chol, min_bp=min_bp, max_bp=max_bp, sort=sort_by, order=sort_order, page=page-1) }}" aria-label="Previous page">Previous</a>
+		<span class="muted">Page {{ page }} of {{ pages }}</span>
+		<a class="page-link {{ 'disabled' if page >= pages else '' }}" href="{{ url_for('explorer', q=query, age_group=selected_age, sex=selected_sex, disease=selected_disease, min_chol=min_chol, max_chol=max_chol, min_bp=min_bp, max_bp=max_bp, sort=sort_by, order=sort_order, page=page+1) }}" aria-label="Next page">Next</a>
+	</nav>
+</section>
+{% endblock %}

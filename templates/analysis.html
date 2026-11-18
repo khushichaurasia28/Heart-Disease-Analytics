@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block heading %}Data cleaning & EDA{% endblock %}
+{% block content %}
+<div class="section-heading"><div><span class="eyebrow">SOURCE-TO-OUTPUT AUDIT</span><h2>Cleaning and preprocessing</h2></div><a class="button secondary" href="{{ url_for('download_csv') }}">Export processed CSV</a></div>
+<div class="kpi-grid">
+	<div class="kpi"><span>Raw records</span><strong>{{ cleaning.raw_rows }}</strong><small>Source CSV</small></div>
+	<div class="kpi"><span>Missing values found</span><strong>{{ cleaning.raw_missing }}</strong><small>Before cleaning</small></div>
+	<div class="kpi"><span>Duplicate rows found</span><strong>{{ cleaning.duplicate_rows }}</strong><small>Removed if present</small></div>
+	<div class="kpi"><span>Values imputed</span><strong>{{ cleaning.imputed_values }}</strong><small>Median of each field</small></div>
+</div>
+<section class="panel">
+	<h2>What changed in preprocessing</h2>
+	<ol class="method-list">
+		<li><b>Standardized the source fields.</b> Column names are normalized and values are converted to numeric form; question marks and unparseable entries are treated as missing.</li>
+		<li><b>Checked duplicates.</b> Exact duplicate rows are removed before analysis. This file contains {{ cleaning.duplicate_rows }} duplicate rows.</li>
+		<li><b>Handled missing measurements.</b> Missing <code>ca</code> and <code>thal</code> values are filled with their respective column medians. No records are removed for these missing measurements.</li>
+		<li><b>Prepared the analysis outcome.</b> Original target 0 is labeled “No disease”; original values 1–4 are grouped as “Disease present”. This is a descriptive grouping, not a model output.</li>
+		<li><b>Added readable categories.</b> Sex and age-group labels are derived from the source values to support charts and filtering.</li>
+	</ol>
+	<div class="quality-details"><div><b>Missing values by source field</b>{% if cleaning.missing_by_column %}<ul>{% for column,count in cleaning.missing_by_column.items() %}<li><code>{{ column }}</code><span>{{ count }}</span></li>{% endfor %}</ul>{% else %}<p class="muted">No source missing values detected.</p>{% endif %}</div><div><b>Rows retained</b><p>{{ cleaning.cleaned_rows }} of {{ cleaning.raw_rows }} records</p><p class="muted">{{ cleaning.rows_removed }} rows removed in total; {{ cleaning.cleaned_missing }} missing values remain after cleaning.</p></div></div>
+</section>
+<section class="panel">
+	<div class="section-heading"><div><span class="eyebrow">EXPLORATORY DATA ANALYSIS</span><h2>Descriptive statistics</h2></div><span class="muted">Numeric fields after preprocessing</span></div>
+	<div class="table-wrap"><table><thead><tr><th scope="col">Metric</th>{% for column in stats.describe.keys() %}<th scope="col">{{ column }}</th>{% endfor %}</tr></thead><tbody>{% for metric in ['count','mean','std','min','25%','50%','75%','max'] %}<tr><th scope="row">{{ metric }}</th>{% for column,values in stats.describe.items() %}<td>{{ values.get(metric,'—') }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+</section>
+<section class="panel">
+	<div class="section-heading"><div><span class="eyebrow">OBSERVED IN THIS FILE</span><h2>EDA notes</h2></div><a class="text-link" href="{{ url_for('insights_page') }}">All findings</a></div>
+	{% for finding in findings %}<p class="finding">{{ finding }}</p>{% endfor %}
+</section>
+{% endblock %}

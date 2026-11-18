@@ -1,0 +1,193 @@
+
+{% extends "base.html" %}
+
+{% block heading %}About the project{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="about-lead hero-layout">
+
+    <div class="hero-content">
+        <span class="eyebrow">
+            B.TECH · ARTIFICIAL INTELLIGENCE & DATA SCIENCE
+        </span>
+
+        <h2>Heart Disease Analytics</h2>
+
+        <p>
+            A descriptive data analytics project using the Cleveland subset
+            of the UCI Heart Disease dataset. The project focuses on data
+            preparation, exploratory analysis and presenting meaningful
+            insights through an interactive dashboard.
+        </p>
+    </div>
+
+    <div class="hero-image">
+        <img
+            src="{{ url_for('static', filename='images/Heart Disease Analytics Collection.png') }}"
+            alt="Heart Disease Analytics Illustration">
+    </div>
+
+</section>
+
+
+<!-- PROJECT OBJECTIVE -->
+<section class="panel">
+
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">OBJECTIVE</span>
+            <h2>Project scope</h2>
+        </div>
+    </div>
+
+    <p>
+        Prepare the cardiovascular dataset, study how age, sex, cholesterol
+        and resting blood pressure vary across the recorded outcome groups,
+        and present those observations in a usable analytics interface.
+    </p>
+
+    <p class="muted">
+        This project does not train a machine-learning model and does not
+        produce individual diagnoses or risk scores.
+    </p>
+
+</section>
+
+
+<!-- METHODOLOGY AND TEAM CONTRIBUTION -->
+<section class="about-grid">
+
+    <div class="panel">
+
+        <span class="eyebrow">METHODOLOGY</span>
+        <h2>How the analysis was done</h2>
+
+        <ol class="method-list">
+
+            <li>
+                Load and inspect the original CSV without replacing it.
+            </li>
+
+            <li>
+                Normalize fields, remove exact duplicates and impute missing
+                <code>ca</code>/<code>thal</code> values using column medians.
+            </li>
+
+            <li>
+                Group the original outcome as 0 versus 1–4 for descriptive
+                comparisons.
+            </li>
+
+            <li>
+                Explore distributions and summary statistics with Pandas.
+            </li>
+
+            <li>
+                Present findings in Flask and prepare a processed CSV for Tableau.
+            </li>
+
+        </ol>
+
+    </div>
+
+
+    <div class="panel">
+
+        <span class="eyebrow">TEAM CONTRIBUTION</span>
+        <h2>Team leader · 4 members</h2>
+
+        <p>
+            Led a four-member team through the analytics project workflow,
+            coordinating data cleaning, EDA, dashboard development and the
+            presentation of findings.
+        </p>
+
+        <p>
+            Used GitHub for team collaboration and project version control.
+            Individual member names and task ownership are not listed here.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- TECHNOLOGIES -->
+<section class="panel">
+
+    <span class="eyebrow">TOOLS USED</span>
+    <h2>Technologies</h2>
+
+    <div class="tags">
+        <span>Python</span>
+        <span>Pandas</span>
+        <span>NumPy</span>
+        <span>Flask</span>
+        <span>HTML</span>
+        <span>CSS</span>
+        <span>Chart.js</span>
+        <span>Tableau</span>
+        <span>GitHub</span>
+    </div>
+
+</section>
+
+
+<!-- TABLEAU AND DATA SOURCE -->
+<section class="about-grid">
+
+    <div class="panel">
+
+        <span class="eyebrow">TABLEAU HANDOFF</span>
+        <h2>Continue the analysis</h2>
+
+        <p>
+            Download the processed file and follow the workbook guide for
+            target distribution, age-group comparisons and clinical
+            measure summaries.
+        </p>
+
+        <a class="button secondary"
+           href="{{ url_for('download_csv') }}">
+            Download processed CSV
+        </a>
+
+        <a class="text-link"
+           href="{{ url_for('tableau_guide') }}">
+            Open Tableau instructions
+        </a>
+
+    </div>
+
+
+    <div class="panel">
+
+        <span class="eyebrow">DATA SOURCE & LIMITATIONS</span>
+        <h2>Interpret with care</h2>
+
+        <p>
+            Janosi, A., Steinbrunn, W., Pfisterer, M., & Detrano, R. (1989).
+            <i>Heart Disease</i>. UCI Machine Learning Repository.
+            DOI: 10.24432/C52P4X. License: CC BY 4.0.
+        </p>
+
+        <a href="https://archive.ics.uci.edu/dataset/45/heart+disease"
+           target="_blank"
+           rel="noopener noreferrer">
+            Official UCI dataset page
+        </a>
+
+        <p class="muted">
+            This is a small historical Cleveland subset and may not represent
+            current or wider populations. Associations are not causal evidence;
+            the app is not a clinical tool.
+        </p>
+
+    </div>
+
+</section>
+
+{% endblock %}
+s
